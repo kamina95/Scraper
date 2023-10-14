@@ -4,13 +4,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import webBackend.GraphicCardsAnnotation;
-import webBackend.GraphicDAO;
+import webBackend.GraphicCard;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Awd implements Scraper {
 
@@ -92,16 +88,16 @@ public class Awd implements Scraper {
 
 
     public void createObject(Elements productFeatures, String url, String imgUrl, Double price) {
-        GraphicCardsAnnotation graphicCardsAnnotation = new GraphicCardsAnnotation();
+        GraphicCard graphicCard = new GraphicCard();
 
-        graphicCardsAnnotation.setBrand(productFeatures.select("[data-th*=Brand]").text().trim());
-        graphicCardsAnnotation.setModel(productFeatures.select("[data-th*=Graphics Card Model]").text().trim());
-        graphicCardsAnnotation.setUrl(url);
-        graphicCardsAnnotation.setImgUrl(imgUrl);
-        graphicCardsAnnotation.setPrice(price);
+        graphicCard.setBrand(productFeatures.select("[data-th*=Brand]").text().trim());
+        graphicCard.setModel(productFeatures.select("[data-th*=Graphics Card Model]").text().trim());
+        graphicCard.setUrl(url);
+        graphicCard.setImgUrl(imgUrl);
+        graphicCard.setPrice(price);
 
-        System.out.println(graphicCardsAnnotation);
-        if(graphicCardsAnnotation.getBrand().isEmpty() || graphicCardsAnnotation.getModel().isEmpty() || graphicCardsAnnotation.getPrice() == -1 || graphicCardsAnnotation.getImgUrl().isEmpty() || graphicCardsAnnotation.getUrl().isEmpty()) {
+        System.out.println(graphicCard);
+        if(graphicCard.getBrand().isEmpty() || graphicCard.getModel().isEmpty() || graphicCard.getPrice() == -1 || graphicCard.getImgUrl().isEmpty() || graphicCard.getUrl().isEmpty()) {
 
         }else{
             count++;

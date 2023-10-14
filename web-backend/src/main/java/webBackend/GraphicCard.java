@@ -1,27 +1,29 @@
 package webBackend;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name="graphic_cards")
 public class GraphicCard {
-    int id;
-    String model;
-    String brand;
-    String memorySize;
-    String displays;
-    String resoulution;
-    String color;
-    String memoryInterface;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
 
+    @Column(name = "model" )
+    private String model;
 
+    @Column(name = "brand")
+    private String brand;
 
-    public GraphicCard(int id, String model, String brand, String memorySize, String displays, String resoulution, String color, String memoryInterface) {
-        this.id = id;
-        this.model = model;
-        this.brand = brand;
-        this.memorySize = memorySize;
-        this.displays = displays;
-        this.resoulution = resoulution;
-        this.color = color;
-        this.memoryInterface = memoryInterface;
-    }
+    @Column(name = "url")
+    private String url;
+
+    @Column(name = "imgUrl")
+    private String imgUrl;
+
+    @Column(name = "price")
+    private double price;
 
     public int getId() {
         return id;
@@ -47,43 +49,52 @@ public class GraphicCard {
         this.brand = brand;
     }
 
-    public String getMemorySize() {
-        return memorySize;
+    public String getUrl() {
+        return url;
     }
 
-    public void setMemorySize(String memorySize) {
-        this.memorySize = memorySize;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public String getDisplays() {
-        return displays;
+    public String getImgUrl() {
+        return imgUrl;
     }
 
-    public void setDisplays(String displays) {
-        this.displays = displays;
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+    public double getPrice() {
+        return price;
+    }
+    public void setPrice(double price) {
+        this.price = price;
     }
 
-    public String getResoulution() {
-        return resoulution;
+    @Override
+    public String toString() {
+        return "GraphicCardsAnnotation{" +
+                "model='" + model + '\'' +
+                ", brand='" + brand + '\'' +
+                ", url='" + url + '\'' +
+                ", imgUrl='" + imgUrl + '\'' +
+                ", price=" + price + '\'' +
+                '}';
     }
 
-    public void setResoulution(String resoulution) {
-        this.resoulution = resoulution;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public String getMemoryInterface() {
-        return memoryInterface;
-    }
-
-    public void setMemoryInterface(String memoryInterface) {
-        this.memoryInterface = memoryInterface;
-    }
+    //    public String getColor() {
+//        return color;
+//    }
+//
+//    public void setColor(String color) {
+//        this.color = color;
+//    }
+//
+//    public String getMemoryInterface() {
+//        return memoryInterface;
+//    }
+//
+//    public void setMemoryInterface(String memoryInterface) {
+//        this.memoryInterface = memoryInterface;
+//    }
 }

@@ -1,6 +1,8 @@
 package webBackend;
 
-import scrapers.Awd;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import scrapers.AppConfig;
 import scrapers.ThreatController;
 
 /**
@@ -10,8 +12,11 @@ import scrapers.ThreatController;
 public class App 
 {
     public static void main( String[] args ) {
-        ThreatController threatController = new ThreatController();
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        ThreatController threatController = context.getBean(ThreatController.class);
         threatController.runScrapers();
+        //ThreatController threatController = new ThreatController();
+        //threatController.runScrapers();
 //
 //        Awd awd = new Awd();
 //        awd.scrapeAll();

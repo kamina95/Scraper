@@ -53,7 +53,7 @@ public class GraphicDAO {
 
 
     /** Adds a new cereal to the database */
-    public void addGraphicCard(GraphicCardsAnnotation graphicCardsAnnotation){
+    public void addGraphicCard(GraphicCard graphicCard){
         //Get a new Session instance from the session factory
         Session session = sessionFactory.getCurrentSession();
 
@@ -71,14 +71,14 @@ public class GraphicDAO {
         session.beginTransaction();
 //
 //        //Add Cereal to database - will not be stored until we commit the transaction
-        session.save(graphicCardsAnnotation);
+        session.save(graphicCard);
 //
 //        //Commit transaction to save it to database
         session.getTransaction().commit();
 //
 //        //Close the session and release database connection
         session.close();
-        System.out.println("Cereal added to database with ID: " + graphicCardsAnnotation.getId());
+        System.out.println("Cereal added to database with ID: " + graphicCard.getId());
     }
 
 }

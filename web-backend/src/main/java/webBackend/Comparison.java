@@ -12,8 +12,8 @@ public class Comparison {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "id_gcards", referencedColumnName = "id")
-    private int idCard;
+    @JoinColumn(name = "id_brand", referencedColumnName = "id")
+    private int id_brand;
 
     @Column(name = "url")
     private String url;
@@ -21,8 +21,8 @@ public class Comparison {
     @Column(name = "price")
     private float price;
 
-    @Column(name = "web-name")
-    private String webName;
+//    @Column(name = "web-name")
+//    private String webName;
 
 
     public int getId() {
@@ -34,11 +34,11 @@ public class Comparison {
     }
 
     public int getIdCards() {
-        return idCard;
+        return id_brand;
     }
 
     public void setIdCards(int idCards) {
-        this.idCard = idCards;
+        this.id_brand = idCards;
     }
 
     public String getUrl() {
@@ -57,11 +57,11 @@ public class Comparison {
         this.price = price;
     }
 
-    public String getWebName() {
-        return webName;
-    }
-
-    public void setWebName(String webName) {
-        this.webName = webName;
-    }
+//    public String getWebName() {
+//        return webName;
+//    }
+//
+//    public void setWebName(String webName) {
+//        this.webName = webName;
+//    }
 }
