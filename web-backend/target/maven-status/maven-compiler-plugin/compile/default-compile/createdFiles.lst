@@ -1,0 +1,7 @@
+webBackend\App.class
+webBackend\ThreatController.class
+webBackend\AmazonScraper.class
+webBackend\GraphicCardsAnnotation.class
+webBackend\AppConfig.class
+webBackend\GraphicDAO.class
+webBackend\GraphicCard.class
