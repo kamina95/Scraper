@@ -13,17 +13,13 @@ public class Comparison {
 
     @ManyToOne
     @JoinColumn(name = "id_brand", referencedColumnName = "id")
-    private int id_brand;
+    private Brand id_brand;
 
     @Column(name = "url")
     private String url;
 
     @Column(name = "price")
-    private float price;
-
-//    @Column(name = "web-name")
-//    private String webName;
-
+    private double price;
 
     public int getId() {
         return id;
@@ -33,11 +29,11 @@ public class Comparison {
         this.id = id;
     }
 
-    public int getIdCards() {
+    public Brand getIdCards() {
         return id_brand;
     }
 
-    public void setIdCards(int idCards) {
+    public void setIdCards(Brand idCards) {
         this.id_brand = idCards;
     }
 
@@ -49,19 +45,12 @@ public class Comparison {
         this.url = url;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
-//    public String getWebName() {
-//        return webName;
-//    }
-//
-//    public void setWebName(String webName) {
-//        this.webName = webName;
-//    }
 }

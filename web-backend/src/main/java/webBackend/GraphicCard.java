@@ -13,17 +13,8 @@ public class GraphicCard {
     @Column(name = "model" )
     private String model;
 
-    @Column(name = "brand")
-    private String brand;
-
-    @Column(name = "url")
-    private String url;
-
-    @Column(name = "imgUrl")
-    private String imgUrl;
-
-    @Column(name = "price")
-    private double price;
+    @Column(name = "description")
+    private String description;
 
     public int getId() {
         return id;
@@ -41,60 +32,20 @@ public class GraphicCard {
         this.model = model;
     }
 
-    public String getBrand() {
-        return brand;
+    public String getDescription() {
+        return description;
     }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getImgUrl() {
-        return imgUrl;
-    }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-    public double getPrice() {
-        return price;
-    }
-    public void setPrice(double price) {
-        this.price = price;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
     public String toString() {
         return "GraphicCardsAnnotation{" +
+                "id=" + id + '\'' +
                 "model='" + model + '\'' +
-                ", brand='" + brand + '\'' +
-                ", url='" + url + '\'' +
-                ", imgUrl='" + imgUrl + '\'' +
-                ", price=" + price + '\'' +
+                "description='" + description + '\'' +
                 '}';
     }
-
-    //    public String getColor() {
-//        return color;
-//    }
-//
-//    public void setColor(String color) {
-//        this.color = color;
-//    }
-//
-//    public String getMemoryInterface() {
-//        return memoryInterface;
-//    }
-//
-//    public void setMemoryInterface(String memoryInterface) {
-//        this.memoryInterface = memoryInterface;
-//    }
 }

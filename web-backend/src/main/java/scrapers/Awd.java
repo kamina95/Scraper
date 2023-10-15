@@ -4,13 +4,17 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import webBackend.Brand;
+import webBackend.Comparison;
 import webBackend.GraphicCard;
+import webBackend.GraphicDAO;
 
 import java.io.IOException;
 
 public class Awd implements Scraper {
 
     private volatile boolean stop = false;
+    GraphicDAO graphicDAO = new GraphicDAO();
 
     public void run() {
         if (stop) return;
@@ -22,7 +26,7 @@ public class Awd implements Scraper {
         stop = true;
     }
 
-    //GraphicDAO graphicDAO = new GraphicDAO();
+
     public Elements returnAllProducts(String pageUrl) {
         Document doc = null;
         try {
@@ -38,7 +42,7 @@ public class Awd implements Scraper {
     public void scrapeAll() {
 //        graphicDAO.init();
         Elements productUrlList = new Elements();
-        for (int i = 1; i < 8; i++) { //8
+        for (int i = 1; i < 2; i++) { //8
             Elements productsList = returnAllProducts("https://www.awd-it.co.uk/components/graphics-cards/nvidia.html?p=" + i);
             productUrlList.addAll(productsList);
         }
@@ -88,23 +92,38 @@ public class Awd implements Scraper {
 
 
     public void createObject(Elements productFeatures, String url, String imgUrl, Double price) {
-        GraphicCard graphicCard = new GraphicCard();
 
-        graphicCard.setBrand(productFeatures.select("[data-th*=Brand]").text().trim());
+
+
+        GraphicCard graphicCard = new GraphicCard();
         graphicCard.setModel(productFeatures.select("[data-th*=Graphics Card Model]").text().trim());
-        graphicCard.setUrl(url);
-        graphicCard.setImgUrl(imgUrl);
-        graphicCard.setPrice(price);
+        graphicCard.setDescription("test");
+
+        Brand brand = new Brand();
+        brand.setBrand(productFeatures.select("[data-th*=Brand]").text().trim());
+        brand.setImg_url(imgUrl);
+
+        Comparison comparison = new Comparison();
+        comparison.setUrl(url);
+        comparison.setPrice(price);
 
         System.out.println(graphicCard);
-        if(graphicCard.getBrand().isEmpty() || graphicCard.getModel().isEmpty() || graphicCard.getPrice() == -1 || graphicCard.getImgUrl().isEmpty() || graphicCard.getUrl().isEmpty()) {
 
-        }else{
+        if (!brand.getBrand().isEmpty() && !graphicCard.getModel().isEmpty() && !graphicCard.getDescription().isEmpty() && !brand.getImg_url().isEmpty() && comparison.getPrice() != -1 && !comparison.getUrl().isEmpty()) {
+            graphicDAO.init();
+            graphicDAO.addGraphicCard(graphicCard);
+            brand.setId_product(graphicCard);
+            graphicDAO.addBrand(brand);
+            comparison.setIdCards(brand);
+            graphicDAO.addComparison(comparison);
             count++;
         }
-
-//        if(!graphicCardsAnnotation.getBrand().isEmpty() && !graphicCardsAnnotation.getModel().isEmpty() && !graphicCardsAnnotation.getMemorySize().isEmpty() && !graphicCardsAnnotation.getDisplays().isEmpty()  && !graphicCardsAnnotation.getResolution().isEmpty()) {
-//            graphicDAO.addGraphicCard(graphicCardsAnnotation);
-//        }
     }
 }
+
+//        if(graphicCard.getBrand().isEmpty() || graphicCard.getModel().isEmpty() || graphicCard.getPrice() == -1 || graphicCard.getImgUrl().isEmpty() || graphicCard.getUrl().isEmpty()) {
+//
+//        }else{
+//            count++;
+//        }
+

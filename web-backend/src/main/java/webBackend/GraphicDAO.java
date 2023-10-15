@@ -11,14 +11,18 @@ public class GraphicDAO {
     private SessionFactory sessionFactory;
 
 
-    /** Empty constructor */
+    /**
+     * Empty constructor
+     */
     public GraphicDAO() {
     }
 
 
-    /** Sets up the session factory.
-     *  Call this method first.  */
-    public void init(){
+    /**
+     * Sets up the session factory.
+     * Call this method first.
+     */
+    public void init() {
         try {
             //Create a builder for the standard service registry
             StandardServiceRegistryBuilder standardServiceRegistryBuilder = new StandardServiceRegistryBuilder();
@@ -31,42 +35,34 @@ public class GraphicDAO {
             StandardServiceRegistry registry = standardServiceRegistryBuilder.build();
             try {
                 //Create the session factory - this is the goal of the init method.
-                sessionFactory = new MetadataSources( registry ).buildMetadata().buildSessionFactory();
-            }
-            catch (Exception e) {
+                sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+            } catch (Exception e) {
                     /* The registry would be destroyed by the SessionFactory,
                         but we had trouble building the SessionFactory, so destroy it manually */
                 System.err.println("Session Factory build failed.");
                 e.printStackTrace();
-                StandardServiceRegistryBuilder.destroy( registry );
+                StandardServiceRegistryBuilder.destroy(registry);
             }
 
             //Ouput result
             System.out.println("Session factory built.");
 
-        }
-        catch (Throwable ex) {
+        } catch (Throwable ex) {
             // Make sure you log the exception, as it might be swallowed
             System.err.println("SessionFactory creation failed." + ex);
         }
     }
 
 
-    /** Adds a new cereal to the database */
-    public void addGraphicCard(GraphicCard graphicCard){
+    /**
+     * Adds a new cereal to the database
+     */
+
+    //TODO Change to interface and hold the different tables on a interface, less for repetition
+    public void addGraphicCard(GraphicCard graphicCard) {
         //Get a new Session instance from the session factory
         Session session = sessionFactory.getCurrentSession();
 
-        //Create an instance of a Cereal class
-//        CerealAnnotation cereal = new CerealAnnotation();
-//
-//        //Set values of Cereal class that we want to add
-//        cereal.setBrandId(2);
-//        cereal.setProductTypeId(1);
-//        cereal.setUrlId(1);
-//        cereal.setWeight(2566);
-//        cereal.setPrice(9.5f);
-//
 //        //Start transaction
         session.beginTransaction();
 //
@@ -78,7 +74,35 @@ public class GraphicDAO {
 //
 //        //Close the session and release database connection
         session.close();
-        System.out.println("Cereal added to database with ID: " + graphicCard.getId());
+        System.out.println("GraphicCard added to database with ID: " + graphicCard.getId());
+    }
+
+    public void addBrand(Brand brand) {
+
+        Session session = sessionFactory.getCurrentSession();
+
+        session.beginTransaction();
+
+        session.save(brand);
+
+        session.getTransaction().commit();
+
+        session.close();
+        System.out.println("Brand added to database with ID: " + brand.getId());
+    }
+
+    public void addComparison(Comparison comparison) {
+
+        Session session = sessionFactory.getCurrentSession();
+
+        session.beginTransaction();
+
+        session.save(comparison);
+
+        session.getTransaction().commit();
+
+        session.close();
+        System.out.println("Comparison added to database with ID: " + comparison.getId());
     }
 
 }
