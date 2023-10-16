@@ -40,9 +40,9 @@ public class Awd implements Scraper {
     }
 
     public void scrapeAll() {
-//        graphicDAO.init();
+        graphicDAO.init();
         Elements productUrlList = new Elements();
-        for (int i = 1; i < 2; i++) { //8
+        for (int i = 1; i < 8; i++) { //8
             Elements productsList = returnAllProducts("https://www.awd-it.co.uk/components/graphics-cards/nvidia.html?p=" + i);
             productUrlList.addAll(productsList);
         }
@@ -72,13 +72,18 @@ public class Awd implements Scraper {
             Document doc = null;
             try {
                 doc = Jsoup.connect(pageUrl).get();
+                Element descriptionElement = doc.select(".attr-value > p").first();
+                String description = "";
+                if(descriptionElement != null) {
+                    description = descriptionElement.text();
+                }
                 Elements tables = doc.select(".specs-table");
                 Elements tableFeature = tables.select(".custom-table");
 
                 extractImg(doc);
                 for (Element productFeature : tableFeature) {
                     Elements features = productFeature.select(".table-value");
-                    createObject(features, pageUrl, imgUrl, price);
+                    createClasses(features, pageUrl, imgUrl, price, description);
                 }
 
             } catch (IOException e) {
@@ -90,14 +95,10 @@ public class Awd implements Scraper {
 
     int count = 0;
 
-
-    public void createObject(Elements productFeatures, String url, String imgUrl, Double price) {
-
-
-
+    public void createClasses(Elements productFeatures, String url, String imgUrl, Double price, String description) {
         GraphicCard graphicCard = new GraphicCard();
         graphicCard.setModel(productFeatures.select("[data-th*=Graphics Card Model]").text().trim());
-        graphicCard.setDescription("test");
+        graphicCard.setDescription(description);
 
         Brand brand = new Brand();
         brand.setBrand(productFeatures.select("[data-th*=Brand]").text().trim());
@@ -106,19 +107,50 @@ public class Awd implements Scraper {
         Comparison comparison = new Comparison();
         comparison.setUrl(url);
         comparison.setPrice(price);
+        createTables(graphicCard, brand, comparison);
+    }
 
-        System.out.println(graphicCard);
-
-        if (!brand.getBrand().isEmpty() && !graphicCard.getModel().isEmpty() && !graphicCard.getDescription().isEmpty() && !brand.getImg_url().isEmpty() && comparison.getPrice() != -1 && !comparison.getUrl().isEmpty()) {
-            graphicDAO.init();
+    public void createTables(GraphicCard graphicCard, Brand brand, Comparison comparison){
+        if (!brand.getBrand().isEmpty() && !graphicCard.getModel().isEmpty() && !graphicCard.getDescription().isEmpty()
+                && !brand.getImg_url().isEmpty() && comparison.getPrice() != -1 && !comparison.getUrl().isEmpty()
+                && !graphicCard.getDescription().isEmpty()) {
             graphicDAO.addGraphicCard(graphicCard);
             brand.setId_product(graphicCard);
             graphicDAO.addBrand(brand);
             comparison.setIdCards(brand);
             graphicDAO.addComparison(comparison);
             count++;
+            //System.out.println(graphicCard.getDescription());
         }
     }
+
+//    public void createObject(Elements productFeatures, String url, String imgUrl, Double price, String description) {
+//
+//        GraphicCard graphicCard = new GraphicCard();
+//        graphicCard.setModel(productFeatures.select("[data-th*=Graphics Card Model]").text().trim());
+//        graphicCard.setDescription(description);
+//
+//        Brand brand = new Brand();
+//        brand.setBrand(productFeatures.select("[data-th*=Brand]").text().trim());
+//        brand.setImg_url(imgUrl);
+//
+//        Comparison comparison = new Comparison();
+//        comparison.setUrl(url);
+//        comparison.setPrice(price);
+//
+//        if (!brand.getBrand().isEmpty() && !graphicCard.getModel().isEmpty() && !graphicCard.getDescription().isEmpty()
+//                && !brand.getImg_url().isEmpty() && comparison.getPrice() != -1 && !comparison.getUrl().isEmpty()
+//                && !graphicCard.getDescription().isEmpty()) {
+//            graphicDAO.addGraphicCard(graphicCard);
+//            brand.setId_product(graphicCard);
+//            graphicDAO.addBrand(brand);
+//            comparison.setIdCards(brand);
+//            graphicDAO.addComparison(comparison);
+//            count++;
+//            System.out.println(graphicCard.getDescription());
+//        }
+//        System.out.println(count);
+//    }
 }
 
 //        if(graphicCard.getBrand().isEmpty() || graphicCard.getModel().isEmpty() || graphicCard.getPrice() == -1 || graphicCard.getImgUrl().isEmpty() || graphicCard.getUrl().isEmpty()) {

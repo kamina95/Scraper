@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class AppConfig {
+public class ThreadService {
 
     @Bean
     public Awd myAwd(){
@@ -15,7 +15,7 @@ public class AppConfig {
     @Bean
     public ThreatController myThreatController(){
         ThreatController threatController = new ThreatController();
-        Scraper[] scrapers = {new Awd()};
+        Scraper[] scrapers = {myAwd()};
         threatController.setScrapers(scrapers);
         return threatController;
     }
