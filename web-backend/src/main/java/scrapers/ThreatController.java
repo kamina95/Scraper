@@ -24,7 +24,6 @@ public class ThreatController {
     }
 
     public void runScrapers() {
-        scrapers = new Scraper[]{new Awd()};
         Thread[] threads = new Thread[scrapers.length];
 
         for (int i = 0; i < scrapers.length; i++) {
