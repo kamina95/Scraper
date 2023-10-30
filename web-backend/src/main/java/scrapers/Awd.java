@@ -11,28 +11,9 @@ import webBackend.GraphicDAO;
 
 import java.io.IOException;
 
-public class Awd implements Scraper {
+public class Awd extends Scraper {
 
     private volatile boolean stop = false;
-    public static GraphicDAO graphicDAO;
-
-    private int count = 0;
-
-    public void run() {
-        if (stop) return;
-        scrapeAll();
-        System.out.println(count);
-    }
-
-    public void setHibernate(GraphicDAO graphicDAO) {
-        Awd.graphicDAO = graphicDAO;
-    }
-
-    public void stop() {
-        stop = true;
-    }
-
-
     public Elements returnAllProducts(String pageUrl) {
         Document doc = null;
         try {
@@ -79,7 +60,7 @@ public class Awd implements Scraper {
                 Elements tableFeature = tables.select(".custom-table");
                 for (Element productFeature : tableFeature) {
                     Elements features = productFeature.select(".table-value");
-                    createClasses(features, pageUrl, imgUrl, price, description);
+                    extractData(features, pageUrl, imgUrl, price, description);
                 }
 
             } catch (IOException e) {
@@ -89,31 +70,10 @@ public class Awd implements Scraper {
         }
     }
 
-    public void createClasses(Elements productFeatures, String url, String imgUrl, Double price, String description) {
-        GraphicCard graphicCard = new GraphicCard();
-        graphicCard.setModel(productFeatures.select("[data-th*=Graphics Card Model]").text().trim());
-        graphicCard.setDescription(description);
-
-        Brand brand = new Brand();
-        brand.setBrand(productFeatures.select("[data-th*=Brand]").text().trim());
-        brand.setImg_url(imgUrl);
-
-        Comparison comparison = new Comparison();
-        comparison.setUrl(url);
-        comparison.setPrice(price);
-        createTables(graphicCard, brand, comparison);
+    public void extractData(Elements productFeatures, String url, String imgUrl, Double price, String description) {
+        String model = productFeatures.select("[data-th*=Graphics Card Model]").text().trim();
+        String brand = productFeatures.select("[data-th*=Brand]").text().trim();
+        createClasses(model, brand, url, imgUrl, price, description);
     }
 
-    public void createTables(GraphicCard graphicCard, Brand brand, Comparison comparison) {
-        if (!brand.getBrand().isEmpty() && !graphicCard.getModel().isEmpty() && !graphicCard.getDescription().isEmpty()
-                && !brand.getImg_url().isEmpty() && comparison.getPrice() != -1 && !comparison.getUrl().isEmpty()
-                && !graphicCard.getDescription().isEmpty()) {
-            graphicDAO.addGraphicCard(graphicCard);
-            brand.setId_product(graphicCard);
-            graphicDAO.addBrand(brand);
-            comparison.setIdCards(brand);
-            graphicDAO.addComparison(comparison);
-            count++;
-        }
-    }
 }

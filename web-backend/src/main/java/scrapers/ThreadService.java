@@ -28,11 +28,24 @@ public class ThreadService {
         return amazonScraper;
     }
 
+    @Bean
+    public OverclockersScraper myOverclockersScraper(){
+        OverclockersScraper overclockersScraper = new OverclockersScraper();
+        overclockersScraper.setHibernate(myHibernateSession());
+        return overclockersScraper;
+    }
+
+    @Bean
+    public EbuyerScraper myEbuyerScraper(){
+        EbuyerScraper ebuyerScraper = new EbuyerScraper();
+        ebuyerScraper.setHibernate(myHibernateSession());
+        return ebuyerScraper;
+    }
 
     @Bean
     public ThreatController myThreatController(){
         ThreatController threatController = new ThreatController();
-        Scraper[] scrapers = {myAwd(), myNovatech(), myAmazonScraper()};
+        Scraper[] scrapers = {myEbuyerScraper(), myAwd(), myNovatech(), myAmazonScraper(), myOverclockersScraper()};
         threatController.setScrapers(scrapers);
         return threatController;
     }

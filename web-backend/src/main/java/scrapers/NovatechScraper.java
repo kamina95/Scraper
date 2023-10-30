@@ -4,35 +4,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import webBackend.Brand;
-import webBackend.Comparison;
-import webBackend.GraphicCard;
-import webBackend.GraphicDAO;
-
-import java.io.IOException;
 
 public class NovatechScraper extends Scraper{
 
-    int count = 0;
     private final String ABSOLUTE_URL = "https://www.novatech.co.uk";
-    private volatile boolean stop = false;
-    public static GraphicDAO graphicDAO;
     public Document doc;
-
-    public void run() {
-        if (stop) return;
-        scrapeAll();
-        System.out.println(count);
-    }
-
-    public void setHibernate(GraphicDAO graphicDAO){
-        this.graphicDAO = graphicDAO;
-    }
-
-    public void stop() {
-        stop = true;
-    }
-
 
     public Elements returnAllProducts(String pageUrl) {
         doc = null;
@@ -89,7 +65,8 @@ public class NovatechScraper extends Scraper{
                 if (tdName != null && "Graphics Engine".equals(tdName.text())) {
                     // Extract the value from the next td element
                     Element tdValue = row.select(".value").first();
-                    model = tdValue.text().replace(" (Ada Lovelace Architecture)", "").replace(" (Ampere Architecture)","").replace(" (Kepler)","").trim();; // This will print "NVIDIA GeForce RTX 4080 (Ada Lovelace Architecture)"
+                    model = tdValue.text().replace("(Turing Architecture)","").replace("(Pascal)","")
+                            .replace(" (Ada Lovelace Architecture)", "").replace("(Ampere)","").replace(" (Ampere Architecture)","").replace(" (Kepler)","").trim();; // This will print "NVIDIA GeForce RTX 4080 (Ada Lovelace Architecture)"
                     break;
                 }
             }
@@ -97,35 +74,6 @@ public class NovatechScraper extends Scraper{
             System.out.println(price + " " + model + "\n" + description + "\n" + imgUrldoc + "\n" + model);
 
             createClasses(model, brand, pageUrl, imgUrldoc, price, description);
-        }
-    }
-
-
-    public void createClasses(String model, String brandName, String url, String imgUrl, Double price, String description) {
-        GraphicCard graphicCard = new GraphicCard();
-        graphicCard.setModel(model);
-        graphicCard.setDescription(description);
-
-        Brand brand = new Brand();
-        brand.setBrand(brandName);
-        brand.setImg_url(imgUrl);
-
-        Comparison comparison = new Comparison();
-        comparison.setUrl(url);
-        comparison.setPrice(price);
-        createTables(graphicCard, brand, comparison);
-    }
-
-    public void createTables(GraphicCard graphicCard, Brand brand, Comparison comparison){
-        if (!brand.getBrand().isEmpty() && !graphicCard.getModel().isEmpty() && !graphicCard.getDescription().isEmpty()
-                && !brand.getImg_url().isEmpty() && comparison.getPrice() != -1 && !comparison.getUrl().isEmpty()
-                && !graphicCard.getDescription().isEmpty()) {
-            graphicDAO.addGraphicCard(graphicCard);
-            brand.setId_product(graphicCard);
-            graphicDAO.addBrand(brand);
-            comparison.setIdCards(brand);
-            graphicDAO.addComparison(comparison);
-            count++;
         }
     }
 

@@ -14,26 +14,11 @@ import webBackend.GraphicDAO;
 
 import java.util.List;
 
-public class AmazonScraper implements Scraper {
-    private volatile boolean stop = false;
+public class AmazonScraper extends Scraper {
+
     private static WebDriver driver;
     private static final ChromeOptions options = new ChromeOptions();
     private static boolean isIn = false;
-    public static GraphicDAO graphicDAO;
-    public static int count = 0;
-
-    public void run() {
-        if (stop) return;
-        scrapeAll();
-        System.out.println(count);
-    }
-    public void setHibernate(GraphicDAO graphicDAO) {
-        AmazonScraper.graphicDAO = graphicDAO;
-    }
-    @Override
-    public void stop() {
-        stop = true;
-    }
 
     public void connectToAmazon(){
 
@@ -177,7 +162,7 @@ public class AmazonScraper implements Scraper {
                 }
             }
             System.out.println(price + " " + imgUrl + " " + description + "\n" + brand + " " + graphicsCoprocessor + "\n" + link + "\n");
-            createObjects(link, description, brand, graphicsCoprocessor, imgUrl, price);
+            createClasses(graphicsCoprocessor, brand, link, imgUrl, price, description);
             driver.navigate().back();
             driver.navigate().refresh();
             sleep(1000);
@@ -191,37 +176,6 @@ public class AmazonScraper implements Scraper {
             Thread.sleep(milliseconds);
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
-    }
-
-    public void createObjects(String url, String description, String brand, String model, String imgUrl, double price){
-        GraphicCard graphicCard = new GraphicCard();
-        graphicCard.setModel(model);
-        graphicCard.setDescription(description);
-
-        Brand brandTable = new Brand();
-        brandTable.setBrand(brand);
-        brandTable.setImg_url(imgUrl);
-
-        Comparison comparison = new Comparison();
-        comparison.setUrl(url);
-        comparison.setPrice(price);
-        createTables(graphicCard, brandTable, comparison);
-
-        createTables(graphicCard, brandTable, comparison);
-
-    }
-    @Override
-    public void createTables(GraphicCard graphicCard, Brand brand, Comparison comparison) {
-        if (!brand.getBrand().isEmpty() && !graphicCard.getModel().isEmpty() && !graphicCard.getDescription().isEmpty()
-                && !brand.getImg_url().isEmpty() && comparison.getPrice() != -1 && !comparison.getUrl().isEmpty()
-                && !graphicCard.getDescription().isEmpty()) {
-            graphicDAO.addGraphicCard(graphicCard);
-            brand.setId_product(graphicCard);
-            graphicDAO.addBrand(brand);
-            comparison.setIdCards(brand);
-            graphicDAO.addComparison(comparison);
-            count++;
         }
     }
 }
