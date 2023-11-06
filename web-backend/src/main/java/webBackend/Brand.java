@@ -12,8 +12,8 @@ public class Brand {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "id_product", referencedColumnName = "id")
-    private GraphicCard id_product;
+    @JoinColumn(name = "id_product", nullable=false)
+    GraphicCard graphicCard;
 
     @Column(name = "brand")
     private String brand;
@@ -29,12 +29,12 @@ public class Brand {
         this.id = id;
     }
 
-    public GraphicCard getId_product() {
-        return id_product;
+    public GraphicCard getGraphicCard() {
+        return graphicCard;
     }
 
-    public void setId_product(GraphicCard id_product) {
-        this.id_product = id_product;
+    public void setGraphicCard(GraphicCard graphicCard) {
+        this.graphicCard = graphicCard;
     }
 
     public String getBrand() {

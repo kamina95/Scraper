@@ -12,8 +12,8 @@ public class Comparison {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "id_brand", referencedColumnName = "id")
-    private Brand id_brand;
+    @JoinColumn(name = "id_brand", nullable=false)
+    Brand brand;
 
     @Column(name = "url")
     private String url;
@@ -29,12 +29,12 @@ public class Comparison {
         this.id = id;
     }
 
-    public Brand getIdCards() {
-        return id_brand;
+    public Brand getBrand() {
+        return brand;
     }
 
-    public void setIdCards(Brand idCards) {
-        this.id_brand = idCards;
+    public void setBrand(Brand brand) {
+        this.brand = brand;
     }
 
     public String getUrl() {

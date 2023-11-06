@@ -6,6 +6,8 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
+import java.util.List;
+
 public class GraphicDAO {
     //Creates new Sessions when we need to interact with the database
     private SessionFactory sessionFactory;
@@ -52,6 +54,85 @@ public class GraphicDAO {
             System.err.println("SessionFactory creation failed." + ex);
         }
     }
+
+    public void saveAndMerge(Comparison comparison) {
+        Session session = sessionFactory.getCurrentSession();
+        session.beginTransaction();
+
+        //First find or create university
+        String queryStr = "from GraphicCard where model='" + comparison.getBrand().getGraphicCard().getModel() + "'";
+        List<GraphicCard> graphicCardList = session.createQuery(queryStr).getResultList();
+
+        if (graphicCardList.size() == 1) {//Found a single University
+            //Update university location, if we want to
+            //graphicCardList.get(0).setLocation(student.getDegree().getUniversity().getLocation());
+
+            //Set mapped university in degree
+            comparison.getBrand().setGraphicCard(graphicCardList.get(0));
+        }
+        //No university with that name in database
+        else if (graphicCardList.size() == 0) {
+            session.saveOrUpdate(comparison.getBrand().getGraphicCard());
+        }
+        //Error
+//        else {
+//            throw new Exception("Multiple graphic cards with the same name");
+//        }
+
+        queryStr = "from Brand where brand='" + comparison.getBrand().getBrand() + "'";
+        queryStr += " and id_product=" + comparison.getBrand().getGraphicCard().getId();
+
+        List<Brand> brandList = session.createQuery(queryStr).getResultList();
+
+        //Degree is in database
+        if (brandList.size() == 1) {//Found a single Degree
+            //Set mapped university in degree
+            comparison.setBrand(brandList.get(0));
+        }
+        //No degree with that name in database
+        else if (brandList.size() == 0) {
+            session.saveOrUpdate(comparison.getBrand());
+        }
+        //Error
+//        else {
+//            throw new Exception("Multiple degrees with the same name");
+//        }
+        session.saveOrUpdate(comparison);
+        session.getTransaction().commit();
+        System.out.println(comparison.getBrand().getGraphicCard().getModel() + " " + comparison.getBrand().getGraphicCard().getDescription() + " " + comparison.getBrand().getBrand() + " " + comparison.getPrice());
+
+        //Close the session and release database connection
+        session.close();
+    }
+
+//
+//        //Finally save or update student
+//        queryStr = "from Student where firstName='" + student.getFirstName() + "' and surname='" + student.getSurname() + "'";
+//        List<Student> studentList = session.createQuery(queryStr).getResultList();
+//
+//        //Student is in database
+//        if(studentList.size() == 1) {//Found a single Student
+//            //Update student if necessary
+//            studentList.get(0).setAge(student.getAge());//Update mapped student object
+//            System.out.println("Age: " + studentList.get(0).getAge());
+//        }
+//        //No student with that name in database
+//        else if (studentList.size() == 0){
+//            //Create new student
+//            session.saveOrUpdate(student);
+//        }
+//        //Error
+//        else{
+//            throw new Exception("Multiple students with the same first name and surname");
+//        }
+//
+//        //Commit transaction to save chagnes made to mapped classes
+//        session.getTransaction().commit();
+//
+//        //Close the session and release database connection
+//        session.close();
+//        System.out.println("Student ID: " + student.getId() + "; Degree ID: " + student.getDegree().getId() + "; University ID: " + student.getDegree().getUniversity().getId());
+//    }
 
 
     /**

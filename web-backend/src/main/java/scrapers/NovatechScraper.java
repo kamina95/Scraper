@@ -33,7 +33,7 @@ public class NovatechScraper extends Scraper{
     }
 
 
-    public void extractFeatures(Elements products){
+    public void extractFeatures(Elements products) {
 
         for (Element product : products) {
             String relativeUrl = product.select(".search-box-title > h2 > a").attr("href");
